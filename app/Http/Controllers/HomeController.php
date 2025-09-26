@@ -4,31 +4,19 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class PegawaiController extends Controller
+class HomeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data['name'] = "Faiha";
-        $data['my_age'] = 19;
-        $data['hobbies'] = ["Membaca", "Bermain", "Mendengar Musik", "Berenang", "Menggambar"];
-        $data['tgl_harus_wisuda'] = "2025-10-10";
-        $data['time_to_study_left'] = 200;
-        $data['current_semester'] = 3;
-        $data['future_goal'] = "Menjadi SuperWoman";
-
-        if ($data['current_semester'] < 3) {
-            $data['info'] = "Masih Awal, Kejar TAK";
-        } else {
-            $data['info'] = "Jangan main-main, kurang-kurangi main game!";
-        }
-
-        return view('pegawai', $data);
+        /* Cara 1 */
+    $data ['username']        = 'Heroku';
+    $data ['last_login']      = date('Y-m-d H:i:s');
+    $data ['list_pendidikan'] = ['SD','SMP','SMA','S1','S2','S3'];
+    return view('home', $data );
     }
-
-
 
     /**
      * Show the form for creating a new resource.
@@ -78,3 +66,5 @@ class PegawaiController extends Controller
         //
     }
 }
+
+
