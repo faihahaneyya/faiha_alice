@@ -48,20 +48,10 @@ class PelangganController extends Controller
         $data['email'] = $request->email;
         $data['phone'] = $request->phone;
 
-
-
-
         Pelanggan::create($data);
-
-
-
 
         return redirect()->route('pelanggan.index')->with('success', 'Penambahan Data Berhasil!');
 
-
-
-
-        dd($data);
     }
 
 
@@ -93,9 +83,19 @@ class PelangganController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Pelanggan $pelanggan)
+    public function update(Request $request, string $id)
     {
-        //
+        $pelanggan_id = $id;
+        $pelanggan = Pelanggan::findOrFail($pelanggan_id);
+        $pelanggan->first_name = $request->first_name;
+        $pelanggan->last_name = $request->last_name;
+        $pelanggan->birthday = $request->birthday;
+        $pelanggan->gender = $request->gender;
+        $pelanggan->email = $request->email;
+        $pelanggan->phone = $request->phone;
+
+        $pelanggan->save();
+        return redirect()->route('pelanggan.index')->with('success', 'Perubahan data berhasil!');
     }
 
 
@@ -104,9 +104,12 @@ class PelangganController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Pelanggan $pelanggan)
+    public function destroy(string $id)
     {
-        //
+        $pelanggan = pelanggan::findOrFail($id);
+
+        $pelanggan->delete();
+        return redirect()->route('pelanggan.index')->with('success', 'Data berhasil dihapus');
     }
 }
 
