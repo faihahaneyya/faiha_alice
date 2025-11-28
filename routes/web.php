@@ -46,4 +46,8 @@ Route::post('question/store', [QuestionController::class, 'store'])
 
 Route::resource('pelanggan', PelangganController::class);
 
-Route::resource('user', UserController::class);
+Route::resource('user', UserController::class);Route::resource('user', UserController::class);
+
+// Tambahan route untuk file upload
+Route::post('/pelanggan/{id}/upload-files', [PelangganController::class, 'uploadFiles'])->name('pelanggan.upload-files');
+Route::delete('/pelanggan/{id}/delete-file/{fileId}', [PelangganController::class, 'deleteFile'])->name('pelanggan.delete-file');
