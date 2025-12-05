@@ -1,24 +1,23 @@
 <?php
 namespace App\Http\Controllers;
 
-
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage; // ✅ TAMBAH INI
-
+use Illuminate\Support\Facades\Storage;
 
 class UserController extends Controller
 {
     /**
+     *
      * Display a listing of the resource.
      */
+
     public function index()
     {
         $dataUser = User::orderBy('created_at', 'desc')->paginate(2);
         return view('admin.user.index', compact('dataUser'));
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -28,47 +27,42 @@ class UserController extends Controller
         return view('admin.user.create');
     }
 
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        // ✅ UPDATE VALIDASI
         $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email',
-            'password' => 'required|min:8|confirmed',
+            'name'            => 'required',
+            'email'           => 'required|email|unique:users',
+            'password'        => 'required|min:6',
+            'role'            => 'required|in:Super Admin,Administrator,Pelanggan,Mitra',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
-
-        $data = $request->only(['name', 'email']);
+        $data['name']     = $request->name;
+        $data['email']    = $request->email;
         $data['password'] = Hash::make($request->password);
+        $data['role']     = $request->role;
 
-
-        // ✅ HANDLE PROFILE PICTURE UPLOAD
+        // Upload foto jika ada
         if ($request->hasFile('profile_picture')) {
-            $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-            $data['profile_picture'] = $profilePicturePath;
+            $data['profile_picture'] = $request->file('profile_picture')
+                ->store('profile_pictures', 'public');
         }
 
-
         User::create($data);
-
-
-        return redirect()->route('user.index')->with('success', 'Penambahan Data Berhasil!');
+        return redirect()->route('user.index')->with('success', 'Penambahan user berhasil!');
     }
-
 
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
-        //
+        $user = User::findOrFail($id);
+        return view('admin.user.show', compact('user'));
     }
-
 
     /**
      * Show the form for editing the specified resource.
@@ -79,7 +73,6 @@ class UserController extends Controller
         return view('admin.user.edit', compact('user'));
     }
 
-
     /**
      * Update the specified resource in storage.
      */
@@ -87,24 +80,24 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-
-        // ✅ UPDATE VALIDASI
-        $data = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|min:8|confirmed',
+        $request->validate([
+            'name'            => 'required',
+            'email'           => 'required|email|unique:users,email,' . $id,
+            'role'            => 'required|in:Super Admin,Administrator,Pelanggan,Mitra',
+            'password'        => 'nullable|min:6',
             'profile_picture' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
+        $data = [
+            'name'  => $request->name,
+            'email' => $request->email,
+            'role'  => $request->role,
+        ];
 
         // Jika password diisi, update password
-        if ($request->password) {
+        if ($request->filled('password')) {
             $data['password'] = Hash::make($request->password);
-        } else {
-            // Hapus password dari data jika tidak diisi
-            unset($data['password']);
         }
-
 
         // ✅ HANDLE PROFILE PICTURE UPDATE
         if ($request->hasFile('profile_picture')) {
@@ -113,18 +106,14 @@ class UserController extends Controller
                 Storage::disk('public')->delete($user->profile_picture);
             }
 
-
-            $profilePicturePath = $request->file('profile_picture')->store('profile_pictures', 'public');
-            $data['profile_picture'] = $profilePicturePath;
+            $data['profile_picture'] = $request->file('profile_picture')
+                ->store('profile_pictures', 'public');
         }
-
 
         $user->update($data);
 
-
         return redirect()->route('user.index')->with('success', 'User berhasil diupdate!');
     }
-
 
     /**
      * Remove the specified resource from storage.
@@ -133,19 +122,13 @@ class UserController extends Controller
     {
         $user = User::findOrFail($id);
 
-
         // ✅ DELETE PROFILE PICTURE IF EXISTS
         if ($user->profile_picture && Storage::disk('public')->exists($user->profile_picture)) {
             Storage::disk('public')->delete($user->profile_picture);
         }
 
-
         $user->delete();
-
 
         return redirect()->route('user.index')->with('success', 'Data berhasil dihapus!');
     }
 }
-
-
-

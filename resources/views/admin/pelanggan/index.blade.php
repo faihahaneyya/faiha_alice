@@ -1,7 +1,8 @@
 @extends('layouts.admin.app')
 
+
 @section('content')
-    {{-- start main content  --}}
+    {{-- start main content --}}
     <div class="py-4">
         <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
             <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
@@ -30,16 +31,16 @@
         </div>
     </div>
 
+
     <div class="row">
         <div class="col-12 mb-4">
-            <div class="card borar-0 shadow mb-4">
+            <div class="card border-0 shadow mb-4">
                 <div class="card-body">
                     <div class="table-responsive">
-
                         <form method="GET" action="{{ route('pelanggan.index') }}" class="mb-3">
                             <div class="row">
                                 <div class="col-md-2">
-                                    <select name="gender" class="form-select" onchange="this.form.submit()" class="mb-3">
+                                    <select name="gender" class="form-select" onchange="this.form.submit()">
                                         <option value="">All</option>
                                         <option value="Male" {{ request('gender') == 'Male' ? 'selected' : '' }}>Male
                                         </option>
@@ -47,20 +48,26 @@
                                         </option>
                                     </select>
                                 </div>
-
                                 <div class="col-md-3">
                                     <div class="input-group">
                                         <input type="text" name="search" class="form-control" id="exampleInputIconRight"
                                             value="{{ request('search') }}" placeholder="Search" aria-label="Search">
                                         <button type="submit" class="input-group-text" id="basic-addon2">
-                                            @if(request('search'))
-                            <a href="{{ request()->fullUrlWithQuery(['search'=> null]) }}" class="btn btn-outline-secondary ml-3" id="clear-search"> Clear</a>
-                    @endif
-            </div>
-</div>
+                                            <svg class="icon icon-xxs" fill="currentColor" viewBox="0 0 20 20"
+                                                xmlns="http://www.w3.org/2000/svg">
+                                                <path fill-rule="evenodd"
+                                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                                    clip-rule="evenodd"></path>
+                                            </svg>
+                                        </button>
+                                        @if (request('search'))
+                                            <a href="{{ request()->fullUrlWithQuery(['search' => null]) }}"
+                                                class="btn btn-outline-secondary ml-3" id="clear-search"> Clear</a>
+                                        @endif
+                                    </div>
+                                </div>
                             </div>
                         </form>
-
                         <table id="table-pelanggan" class="table table-centered table-nowrap mb-0 rounded">
                             <thead class="thead-light">
                                 <tr>
@@ -76,7 +83,6 @@
                             <tbody>
                                 @foreach ($dataPelanggan as $item)
                                     <tr>
-
                                         <td>{{ $item->first_name }}</td>
                                         <td>{{ $item->last_name }}</td>
                                         <td>{{ $item->birthday }}</td>
@@ -84,7 +90,7 @@
                                         <td>{{ $item->email }}</td>
                                         <td>{{ $item->phone }}</td>
                                         <td>
-                                              {{-- TOMBOL DETAIL --}}
+                                            {{-- TOMBOL DETAIL --}}
                                             <a href="{{ route('pelanggan.show', $item->pelanggan_id) }}"
                                                 class="btn btn-info btn-sm">
                                                 <svg class="icon icon-xs me-2" data-slot="icon" fill="none"
@@ -99,9 +105,11 @@
                                                 </svg>
                                                 Detail
                                             </a>
-                                            {{-- ini edit --}}
+
+
+                                            {{-- TOMBOL EDIT --}}
                                             <a href="{{ route('pelanggan.edit', $item->pelanggan_id) }}"
-                                                class="btn btn-info btn-sm">
+                                                class="btn btn-warning btn-sm">
                                                 <svg class="icon icon-xs me-2" data-slot="icon" fill="none"
                                                     stroke-width="1.5" stroke="currentColor" viewBox="0 0 24 24"
                                                     xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -111,8 +119,9 @@
                                                 </svg>
                                                 Edit
                                             </a>
-                                            {{-- ini delete --}}
-                                            {{-- tombol delet --}}
+
+
+                                            {{-- TOMBOL DELETE --}}
                                             <form action="{{ route('pelanggan.destroy', $item->pelanggan_id) }}"
                                                 method="POST" class="d-inline">
                                                 @csrf
@@ -128,8 +137,7 @@
                                                     </svg>
                                                     Delete
                                                 </button>
-
-
+                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach
@@ -143,5 +151,8 @@
             </div>
         </div>
     </div>
-    {{-- end main content  --}}
+    {{-- end main content --}}
 @endsection
+
+
+

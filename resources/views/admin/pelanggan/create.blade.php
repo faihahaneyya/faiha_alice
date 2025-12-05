@@ -1,6 +1,9 @@
 @extends('layouts.admin.app')
-
 @section('content')
+
+
+
+
         <div class="py-4">
             <nav aria-label="breadcrumb" class="d-none d-md-inline-block">
                 <ol class="breadcrumb breadcrumb-dark breadcrumb-transparent">
@@ -25,6 +28,9 @@
                 </div>
             </div>
         </div>
+
+
+
 
         <div class="row">
             <div class="col-12 mb-4">
@@ -113,4 +119,9 @@
                 </div>
             </div>
         </div>
+
+
 @endsection
+
+
+
